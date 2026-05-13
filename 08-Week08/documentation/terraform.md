@@ -1,6 +1,6 @@
-### Terraform
+# Terraform
 
-# The Required Arguments for a VM in Terraform
+## The Required Arguments for a VM in Terraform
 1. boot_disk
 2. machine_type
 3. name
@@ -13,7 +13,7 @@
 | `boot_disk`         | Contains the operating system for the VM instance. An image must be provided to choose which operating system will be installed. |
 | `network_interface` | Connects the VM instance to a VPC network so it can communicate with other resources and access the internet. |
 
-# Getting Internal and External IP Addresses Output
+## Getting Internal and External IP Addresses Output
  Both attributes are listed in the [Terraform Registry docs](https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/compute_instance#attributes-reference). Stackflow and [Reddit](https://www.reddit.com/r/Terraform/comments/rd8mx0/how_to_get_external_ip_address_that_google_cloud/) also has useful code that is worth testing out.
 
 ```bash
@@ -28,7 +28,7 @@ output "external_ip" {
 }
 ```
 
-# Non-required VM arguments
+## Non-required VM arguments
 1. labels 
 2. tags
 
@@ -38,7 +38,7 @@ output "external_ip" {
 | `tags` | Also used for organizing purposes similar to labels however they have the ability to searve as somewhat of a defacto tool of access controll and policy enforcement. |
 
 
-# How to find CentOS image
+## How to find CentOS image
 As far as formatting goes, the [Terraform Registry](https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/compute_instance#nested_boot_disk) will be the source for that aspect. In order to find image itself you should run:
 ```bash
 gcloud compute images list
@@ -50,7 +50,7 @@ initialize_params {
       image = "centos-cloud/centos-stream-10"
 ```
 
-# name vs id vs self_link Attributes
+## name vs id vs self_link Attributes
 
 name is typically the user-given name used to identify a particular resource.
 
