@@ -50,7 +50,7 @@ initialize_params {
       image = "centos-cloud/centos-stream-10"
 ```
 
-# Name vs id vs self_link Attributes
+# name vs id vs self_link Attributes
 
 name is typically the user-given name used to identify a particular resource.
 
