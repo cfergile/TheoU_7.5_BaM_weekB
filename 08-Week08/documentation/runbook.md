@@ -41,7 +41,7 @@ The main objective of the following approach is to create a managed instance gro
 2. Select at the top of the page "Delete Group".
 ![Deleting the Managed Instance Group](../images/delete-mig.png)
 3. On the side panel right underneath Instance groups click on Health cheacks
-4. Check the box of the health check most recently crated and at the top of the page click "Delete"
+4. Check the box of the health check most recently created and at the top of the page click "Delete"
 ![Deleting the Health Check Configuration](../images/delete-healthcheck.png)
 
 ---
