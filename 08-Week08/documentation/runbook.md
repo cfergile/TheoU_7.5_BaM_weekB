@@ -4,6 +4,7 @@ The main objective of the following approach is to create a managed instance gro
 
 
 # Prerequisites
+
 1. Access to a Google Cloud Platform console.
 2. A custom or default VPC in which your instances will operate in.
 3. Firewall rule that allow your instances to be accessible.
