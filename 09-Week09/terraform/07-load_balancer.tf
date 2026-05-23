@@ -22,7 +22,7 @@ resource "google_compute_backend_service" "web_backend" {
   health_checks = [
     google_compute_health_check.http_health_check.id
   ]
-
+# The actual backend- the instance group manager aka managed instance group
   backend {
     group = google_compute_region_instance_group_manager.demo_mig.instance_group
   }
@@ -40,7 +40,7 @@ resource "google_compute_target_http_proxy" "web_http_proxy" {
   url_map = google_compute_url_map.web_url_map.id
 }
 
-
+# Creates a Frontend Service for the Load Balancer, which listens on a public IP and forwards traffic to the target HTTP proxy
 resource "google_compute_global_forwarding_rule" "web_frontend" {
   name                  = "web-frontend"
   ip_protocol           = "TCP"
