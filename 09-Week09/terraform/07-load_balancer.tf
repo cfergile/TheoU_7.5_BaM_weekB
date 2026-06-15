@@ -8,7 +8,7 @@ resource "google_compute_health_check" "http_health_check" {
 
   http_health_check {
     port         = 80
-    request_path = "/"
+    request_path = "/healthz"
   }
 }
 
