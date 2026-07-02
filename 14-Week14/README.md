@@ -6,23 +6,24 @@
 
 A production-style hybrid cloud networking project demonstrating secure connectivity between **Google Cloud Platform (GCP)** and **Amazon Web Services (AWS)** using **Google Cloud HA VPN**, **AWS Site-to-Site VPN**, **IPsec**, and **Border Gateway Protocol (BGP)**.
 
-The project establishes a highly available VPN architecture consisting of four redundant IPsec tunnels, dynamically exchanges routes between cloud providers using BGP, and validates private communication between workloads hosted in separate cloud environments.
+The project establishes a highly available VPN architecture consisting of four redundant IPsec tunnels, dynamically exchanges routes between cloud providers using BGP, and validates secure private communication between workloads hosted in separate cloud environments.
 
 ---
 
 # Project Overview
 
-The objective of this project is to build a secure hybrid cloud network connecting Google Cloud and AWS using industry-standard networking technologies.
+The objective of this project is to design, deploy, validate, troubleshoot, and safely decommission a hybrid cloud network connecting Google Cloud and AWS using industry-standard networking technologies.
 
 The deployment includes:
 
 - Custom VPCs in both cloud providers
 - Google Cloud HA VPN
 - AWS Site-to-Site VPN
-- AWS Virtual Private Gateway
 - Google Cloud Cloud Router
+- AWS Virtual Private Gateway
+- Two AWS Customer Gateways
 - Four redundant IPsec VPN tunnels
-- Dynamic routing using BGP
+- Dynamic routing using Border Gateway Protocol (BGP)
 - End-to-end validation over private IP addresses
 
 This repository contains the complete deployment documentation, validation procedures, troubleshooting guidance, and cleanup instructions required to reproduce the environment.
@@ -32,7 +33,7 @@ This repository contains the complete deployment documentation, validation proce
 # Architecture
 
 ```text
-                         Hybrid Cloud Architecture
+                        Hybrid Cloud Architecture
 
         Google Cloud Platform (GCP)                 Amazon Web Services (AWS)
 ┌─────────────────────────────────────┐     ┌─────────────────────────────────────┐
@@ -44,8 +45,7 @@ This repository contains the complete deployment documentation, validation proce
 │                                     │     │                                     │
 │     Cloud Router (ASN 64514)        │◄──►│ Virtual Private Gateway (ASN 65001) │
 │                                     │     │                                     │
-│        HA VPN Gateway               │═════│ Two Site-to-Site VPN Connections    │
-│        Two Interfaces               │     │ Four IPsec VPN Tunnels              │
+│     HA VPN Gateway (2 Interfaces)   │═════│ Four IPsec VPN Tunnels              │
 └─────────────────────────────────────┘     └─────────────────────────────────────┘
 ```
 
@@ -104,7 +104,7 @@ This project demonstrates practical experience with:
 
 # Deployment Highlights
 
-During this project the following infrastructure was successfully deployed:
+The deployment included the following infrastructure:
 
 - Custom Google Cloud VPC
 - Custom AWS VPC
@@ -126,7 +126,7 @@ The completed deployment achieved the following validated state:
 - Four IPsec tunnels established
 - Four BGP sessions established
 - Google Cloud learned the AWS network (`10.20.0.0/16`)
-- AWS learned the Google Cloud network (`10.10.1.0/24`)
+- AWS installed the Google Cloud network (`10.10.1.0/24`) through route propagation
 - Google Cloud VM successfully communicated with the AWS EC2 instance
 - AWS EC2 successfully communicated with the Google Cloud VM
 - End-to-end communication occurred entirely over private IP addresses
@@ -138,14 +138,16 @@ The completed deployment achieved the following validated state:
 ```text
 14-Week14/
 │
+├── README.md
+│
 ├── documentation/
-│   ├── README.md
 │   ├── runbook.md
 │   └── Q & A.md
 │
 └── images/
     ├── 01-gcp-vpc-created.png
     ├── 02-gcp-test-vm-created.png
+    ├── 03-gcp-cloud-router-created.png
     ├── ...
     └── 18-end-to-end-ping-validation.png
 ```
@@ -156,35 +158,34 @@ The completed deployment achieved the following validated state:
 
 | Document | Description |
 |----------|-------------|
-| `documentation/runbook.md` | Complete deployment guide including planning, implementation, validation, troubleshooting, and cleanup |
-| `documentation/Q & A.md` | Technical questions and explanations related to the deployment |
-| `documentation/README.md` | Project overview and repository documentation |
+| `documentation/runbook.md` | Complete deployment guide covering planning, implementation, validation, troubleshooting, and cleanup |
+| `documentation/Q & A.md` | Technical questions, explanations, and supporting concepts related to the deployment |
 
 ---
 
-# Representative Screenshots
+# Deployment Screenshots
 
 ## Google Cloud Infrastructure
 
-![Google Cloud VPC](../images/01-gcp-vpc-created.png)
+![Google Cloud VPC](images/01-gcp-vpc-created.png)
 
-![Cloud Router](../images/03-gcp-cloud-router-created.png)
+![Google Cloud Cloud Router](images/03-gcp-cloud-router-created.png)
 
 ---
 
 ## VPN Deployment
 
-![AWS VPN Overview](../images/13-aws-vpn-connection-overview.png)
+![AWS VPN Connection Overview](images/13-aws-vpn-connection-overview.png)
 
-![Google Cloud VPN Tunnels](../images/17-gcp-vpn-tunnels-established.png)
+![Google Cloud VPN Tunnels](images/17-gcp-vpn-tunnels-established.png)
 
 ---
 
 ## Validation
 
-![BGP Sessions](../images/16-gcp-bgp-sessions-established.png)
+![Google Cloud BGP Sessions](images/16-gcp-bgp-sessions-established.png)
 
-![End-to-End Validation](../images/18-end-to-end-ping-validation.png)
+![End-to-End Connectivity Validation](images/18-end-to-end-ping-validation.png)
 
 ---
 
@@ -193,11 +194,11 @@ The completed deployment achieved the following validated state:
 This deployment reinforced several important networking concepts:
 
 - IPsec and BGP serve different purposes within a VPN architecture.
-- Google Cloud HA VPN uses two gateway interfaces while AWS exposes four tunnel endpoints.
-- Correct BGP peer addressing is critical for successful route exchange.
-- AWS requires Virtual Private Gateway route propagation before learned routes become usable.
-- Validating a hybrid cloud deployment layer by layer greatly simplifies troubleshooting.
-- Thorough planning of IP addressing and ASNs reduces deployment complexity.
+- Google Cloud HA VPN exposes two gateway interfaces, while AWS creates four tunnel endpoints across two Site-to-Site VPN connections.
+- Correct BGP peer IP addressing is critical for successful route establishment.
+- AWS requires Virtual Private Gateway route propagation before learned routes become active within the VPC route table.
+- Validating a hybrid cloud deployment layer by layer significantly simplifies troubleshooting.
+- Careful planning of IP addressing, ASNs, and tunnel mappings reduces deployment complexity and prevents configuration errors.
 
 ---
 
@@ -208,7 +209,7 @@ This deployment reinforced several important networking concepts:
 - HA VPN  
   https://cloud.google.com/network-connectivity/docs/vpn/concepts/overview
 
-- Cloud Router  
+- Cloud Router Overview  
   https://cloud.google.com/network-connectivity/docs/router/concepts/overview
 
 - External Peer VPN Gateway  
@@ -240,7 +241,7 @@ This deployment reinforced several important networking concepts:
 - RFC 4303 – IP Encapsulating Security Payload (ESP)  
   https://www.rfc-editor.org/rfc/rfc4303
 
-- RFC 7296 – Internet Key Exchange Version 2 (IKEv2)  
+- RFC 7296 – Internet Key Exchange Protocol Version 2 (IKEv2)  
   https://www.rfc-editor.org/rfc/rfc7296
 
 - RFC 4271 – Border Gateway Protocol Version 4 (BGP-4)  
