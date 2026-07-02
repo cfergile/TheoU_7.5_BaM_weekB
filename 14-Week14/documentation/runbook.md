@@ -193,13 +193,15 @@ By the end of this phase, you will have:
 
 # Network Addressing Plan
 
-The Google Cloud and AWS environments must use **non-overlapping private address ranges**. Overlapping CIDR blocks prevent proper route advertisement and make end-to-end communication impossible.
+The Google Cloud and AWS environments use non-overlapping private address ranges. Non-overlapping CIDR blocks are required for successful BGP route advertisement and private communication between the two cloud providers.
 
-| Environment | Network | CIDR |
-|-------------|---------|------|
-| Google Cloud | Subnet | `10.10.1.0/24` |
+| Environment | Resource | CIDR |
+|-------------|----------|------|
+| Google Cloud | VPC / Subnet | `10.10.1.0/24` |
 | AWS | VPC | `10.20.0.0/16` |
 | AWS | Subnet | `10.20.1.0/24` |
+
+> **Note:** Unlike AWS, Google Cloud VPCs do not have a single VPC CIDR block. The address space is defined by the subnets within the VPC. Because this deployment uses a single custom subnet, the VPC and subnet share the same effective address range (`10.10.1.0/24`).
 
 ### Why These Networks?
 
